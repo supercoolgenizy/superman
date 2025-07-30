@@ -2,32 +2,29 @@ name: gn-hel
 
 on:
   schedule:
-    - cron: '0 */20 * * *'  # every 20 hours at minute 0 (approximate)
-
-  workflow_dispatch:  # manual trigger also available
+    - cron: '0 */20 * * *'  # every 20 hours
+  workflow_dispatch:
 
 jobs:
   update-file:
     runs-on: ubuntu-latest
 
     steps:
-      - name: one
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: two
-        id: fetch_content
+      - name: Fetch new content
         run: |
           curl -s https://erjns.clever.college > lol
-          echo "::set-output name=content::$(cat lol | base64 -w 0)"
 
-      - name: threee
+      - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet lol; then
-            git add lol
+          git add lol
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
             git commit -m "automation"
             git push
-          else
-            echo "No changes to commit"
           fi
