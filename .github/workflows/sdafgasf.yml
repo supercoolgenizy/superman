@@ -15,7 +15,7 @@ jobs:
 
     - name: Fetch new content
       run: |
-        curl -s https://erjns.clever.college > lol
+        curl -s https://yoho.playlette.xyz > lol
 
     - name: Commit and push changes
       run: |
